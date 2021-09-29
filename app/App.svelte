@@ -30,20 +30,56 @@
 </page>
 
 <script>
+    import { action } from "@nativescript/core";
     import { Template  } from "svelte-native/components";
 
     let todos = [];
+    
+    let dones = [];
+
+    const removeFromList = (list, item) => list.filter(t => t !== item)
+    const addToList = (list, item) => [item, ...list]
+    
     let textFieldValue = ''
 
-    const onItemTap = (args) => console.log(`Item ${todos[args.index].name} at index: ${args.index} was tapped.`)
+    
+	const onItemTap = async (args) => {
+		let result = await action("What do you want to do with this task?", 
+			"Cancel", 
+			[
+				"Mark completed", 
+				'Delete forever'
+			]
+		);
 
+
+		console.log(result);
+
+		let item = todos[args.index]
+
+		switch (result) {
+			case "Mark completed":
+				dones = addToList(dones, item)
+				todos = removeFromList(todos, item)
+				break;
+			case "Delete forever":
+				todos = removeFromList(todos, item)
+				break;
+			case "Cancel" || undefined:
+				break;
+
+			default:
+				break;
+		}
+	};
+    
     const onButtonTap = () => {
         if (textFieldValue === '') return;
-
+        
         console.log(`New task added: ${textFieldValue}.`)
-
-        todos= [{name: textFieldValue}, ...todos]
-
-        textFieldValue =''
+        
+        todos = [{name: textFieldValue}, ...todos]
+        
+        textFieldValue = ''
     }
 </script>
