@@ -1,6 +1,6 @@
 <script>
 	import { action } from "@nativescript/core";
-	import { Template  } from "svelte-native/components";
+	import { Template } from "svelte-native/components";
 	
    import { dones, todos } from "~/store";
    import addToList from "~/actions/addToList";
@@ -38,9 +38,16 @@
 </script>
 
 <tabContentItem>
-   <listView items={$dones} on:itemTap={onDoneTap}>
+   <listView items={$dones} on:itemTap={onDoneTap} class="todo-item completed" >
       <Template let:item>
          <label text={item.name} textWrap='true' />
       </Template>
    </listView>
 </tabContentItem>
+
+<style>
+	.completed {
+		color: #939393;
+		text-decoration: line-through;
+	}
+</style>
